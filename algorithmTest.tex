@@ -1,0 +1,119 @@
+\documentclass{article}
+\usepackage{spconf}
+\title{CS9601 Assignment 3 Report}
+\author{
+Xiao Li\\
+\textit{Department of Computer Science}\\
+\textit{The University of Wester Ontario}\\
+\textit{London,ON, Canada}\\
+xli485@csd.uwo.ca
+}
+\date{}
+\usepackage{algorithmic}
+\usepackage{amssymb}
+\usepackage{comment}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[ruled]{algorithm2e}
+\begin{document}
+\maketitle
+
+\section{}
+\subsection{}
+Define HMM of Casino Dice as,
+
+\begin{equation}
+\begin{aligned}
+S & =  \{1,2\}\\
+A & =  \{1,2,3,4,5,6\}\\
+P & =  \left[ \begin{array}{ccc}
+0.95 & 0.05 \\
+0.1 & 0.9 \end{array}\right]\\
+B & =  \left[ \begin{array}{cccccc}
+\frac{1}{6} & \frac{1}{6} & \frac{1}{6}& \frac{1}{6}& \frac{1}{6}& \frac{1}{6}\\
+\frac{1}{10} & \frac{1}{10} & \frac{1}{10}& \frac{1}{10}& \frac{1}{10}& \frac{1}{10}\end{array}\right]\\
+\pi & =  [1,0]\\
+\end{aligned}
+\end{equation}
+
+Let $T$ be number of observation and $O$ be observation sequence. The algorithm to generate these dice rolls is showed in Algorithm \ref{alg:p11}. See R file \textit{HMM.R} for details.
+
+\begin{algorithm}
+\SetAlgoLined
+\KwData{$A$,$B$,$S$ and $P$}
+\KwResult{Emission sequence $O$ and state sequence $Q$}
+\Begin{
+    $i \leftarrow 0$\;
+    $q \leftarrow 1$\;
+    $O \leftarrow c()$\;
+    $Q \leftarrow c()$\;
+    \While{$i < T$}{
+        $Q \leftarrow append(Q, q)$\;
+        $O \leftarrow append(O, sample(A,1,TRUE,B[q,]))$\;
+        $q \leftarrow sample(S,1,TRUE,P[q,])$\;
+        $i \leftarrow i + 1$\;
+    }
+}
+\caption{Generate HMM Emission and State Sequence}
+\label{alg:p11}
+\end{algorithm}
+
+\subsection{}
+\begin{algorithm}
+\caption{top-down approach for active learning framework.}
+\label{alg:topdown}
+\begin{algorithmic}
+    \REQUIRE Query budget $B$
+    \REPEAT
+        \STATE add root node $n_0$ into $\mathcal{W}^{t}$.
+        \REPEAT
+            \STATE Do active learning routine for each node in $\mathcal{W}^{t}$ until its stopping criteria is satisfied.
+            \STATE Add the child nodes of $\mathcal{W}^{t}$ into $\mathcal{W}^{t+1}$.
+            \STATE $t \leftarrow t + 1$.
+        \UNTIL{$\mathcal{W}^{t}$ is empty}
+    \UNTIL{$B=0$}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+  \caption{Time Frames Merging}
+  \label{alg:time frame mergence}
+  \begin{algorithmic}
+    \REQUIRE
+    Time frames $f_1$, $f_2$, \ldots, $f_n$; Distance function $d(i,j)$; Merging ratio $\alpha$;
+     \STATE Compute distance value between each adjacent frames $d(f_i,f_{i+1}),1\leq i \leq n-1$
+     \STATE Set merging threshold $k$ as $\lceil (n-1)* \alpha \rceil$
+     \STATE Find the $k^{th}$ smallest distance value, $d_{(k)}$
+     \STATE Merge time frame subsequence $f_i$, $f_{i+1}$, \ldots, $f_{i+k}$ 
+     that satisfy $d(f_j,f_{j+1}) \leq d_{(k)}$, $j\in[i,k]$;\\
+              \hspace{9mm}     $d(f_{i-1},f_i) \geq d_{(k)}$;\\
+               \hspace{9mm}    $d(f_k,f_{k+1}) \geq d_{(k)}$
+     \STATE \Return the merged time frames of an MFCC
+  \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{}
+We need to compute forward probability. The algorithm is showed in Algorithm
+\begin{algorithm}
+\SetAlgoLined
+\KwData{$N$,$P$,$B$,$\pi$,$O$ and $T$}
+\KwResult{Forward probability $\alpha$}
+\Begin{
+    $\alpha \leftarrow 0$\;
+    $q \leftarrow 1$\;
+    $O \leftarrow c()$\;
+    $Q \leftarrow c()$\;
+    \While{$i < T$}{
+        $Q \leftarrow append(Q, q)$\;
+        $O \leftarrow append(O, sample(A,1,TRUE,B[q,]))$\;
+        $q \leftarrow sample(S,1,TRUE,P[q,])$\;
+        $i \leftarrow i + 1$\;
+    }
+}
+\caption{Generate HMM Emission and State Sequence}
+\label{alg:p11}
+\end{algorithm}
+
+
+
+\end{document} 
